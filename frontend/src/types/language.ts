@@ -31,3 +31,7 @@ export type languageCheck = {
         check: NumericCheck;
     };
 };
+
+export type Language = {
+    name: string;
+};

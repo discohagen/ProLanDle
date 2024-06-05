@@ -150,12 +150,12 @@ export class AnswerService {
         }
         if (todaysAnswer.rank > toCheckEntry.rank) {
             check.rank.check = 'down';
-        } else if (todaysAnswer.rank > toCheckEntry.rank) {
+        } else if (todaysAnswer.rank < toCheckEntry.rank) {
             check.rank.check = 'up';
         }
         if (todaysAnswer.year < toCheckEntry.year) {
             check.year.check = 'down';
-        } else if (todaysAnswer.year < toCheckEntry.year) {
+        } else if (todaysAnswer.year > toCheckEntry.year) {
             check.year.check = 'up';
         }
         return check;

@@ -1,13 +1,11 @@
-import { ComponentPropsWithoutRef } from 'react';
 import {
     Check,
     NumericCheck,
     languageCheck,
-} from '../types/languageCheck';
+} from '../types/language';
 
-type Props = ComponentPropsWithoutRef<'table'> & {
+type Props = {
     languageChecks: languageCheck[];
-    error?: string | null;
 };
 
 function getStyle(check: Check | NumericCheck) {
@@ -32,6 +30,48 @@ function getStyle(check: Check | NumericCheck) {
 }
 
 export function Table(props: Props) {
+    function renderResult(
+        check: Check | NumericCheck,
+        value: string | string[] | number
+    ) {
+        switch (check) {
+            case 'up':
+                return `${value} ↑`;
+            case 'down':
+                return `${value} ↓`;
+            default:
+                return Array.isArray(value)
+                    ? value.join(', ')
+                    : value;
+        }
+    }
+    function renderCells(languageCheck: languageCheck) {
+        return Object.values(languageCheck).map(
+            ({ check, value }) => {
+                return (
+                    <td
+                        key={[check, value].join()}
+                        className={getStyle(check)}
+                    >
+                        {renderResult(check, value)}
+                    </td>
+                );
+            }
+        );
+    }
+    function renderRows() {
+        return props.languageChecks.map((languageCheck) => {
+            return (
+                <tr
+                    key={languageCheck.name.value}
+                    className="h-16 w-3/4"
+                >
+                    {renderCells(languageCheck)}
+                </tr>
+            );
+        });
+    }
+
     return (
         <div className="flex justify-center my-10">
             <table className="w-3/4">
@@ -46,66 +86,7 @@ export function Table(props: Props) {
                             <th>Year</th>
                         </tr>
                     )}
-
-                    {props.languageChecks.map(
-                        (languageCheck) => {
-                            return (
-                                <tr
-                                    key={
-                                        languageCheck.name
-                                            .value
-                                    }
-                                    className="h-16 w-3/4"
-                                >
-                                    {Object.entries(
-                                        languageCheck
-                                    ).map(([, field]) => {
-                                        const {
-                                            check,
-                                            value,
-                                        } = field as {
-                                            check:
-                                                | Check
-                                                | NumericCheck;
-                                            value:
-                                                | string
-                                                | string[]
-                                                | number;
-                                        };
-                                        return (
-                                            <td
-                                                key={[
-                                                    check,
-                                                    value,
-                                                ].join()}
-                                                className={getStyle(
-                                                    check
-                                                )}
-                                            >
-                                                {check ===
-                                                    'up' &&
-                                                    `${value} ↑`}
-                                                {check ===
-                                                    'down' &&
-                                                    `${value} ↓`}
-                                                {check !==
-                                                    'up' &&
-                                                    check !==
-                                                        'down' &&
-                                                    (Array.isArray(
-                                                        value
-                                                    )
-                                                        ? value.join(
-                                                              ', '
-                                                          )
-                                                        : value)}
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        }
-                    )}
+                    {renderRows()}
                 </tbody>
             </table>
         </div>
