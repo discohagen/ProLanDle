@@ -57,7 +57,7 @@ function App() {
         }
     }, [inputValue, languages]);
     return (
-        <div>
+        <div className="h-full">
             <h1 className="text-4xl text-center m-10">
                 ProLanDle
             </h1>
@@ -137,6 +137,30 @@ function App() {
                     )}
             </form>
             <Table languageChecks={languageChecks} />
+            <div className="w-3/4 mx-auto">
+                <p>
+                    <b>ProLanDle</b> (noun): <br />
+                    <i>
+                        Pronunciation: /ˈprōˌlan-dəl/
+                    </i>{' '}
+                    <br />
+                    <b>Definition:</b> ProLanDle [
+                    <i>
+                        abbr. for{' '}
+                        <b>Programming-Language-dle</b>
+                    </i>
+                    ] is an interactive web application that
+                    emulates the popular game Wordle but
+                    with a unique twist tailored for
+                    programming enthusiasts. In ProLanDle,
+                    users are challenged to guess the name
+                    of a programming language. Each guess
+                    provides feedback, guiding the player
+                    towards the correct answer through a
+                    process of elimination and logical
+                    deduction.
+                </p>
+            </div>
         </div>
     );
 }
