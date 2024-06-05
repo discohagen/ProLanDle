@@ -1,38 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Input } from './components/Input';
+import { Table } from './components/Table';
+import { languageCheck } from './types/languageCheck';
 
 type Language = {
     name: string;
-};
-
-type Check = 'correct' | 'semi-correct' | 'incorrect';
-type NumericCheck = 'up' | 'down' | 'equal';
-
-type languageCheck = {
-    name: {
-        value: string;
-        check: Check;
-    };
-    paradigm: {
-        value: string[];
-        check: Check;
-    };
-    typeSystem: {
-        value: string;
-        check: Check;
-    };
-    translatingMethod: {
-        value: string;
-        check: Check;
-    };
-    rank: {
-        value: number;
-        check: NumericCheck;
-    };
-    year: {
-        value: number;
-        check: NumericCheck;
-    };
 };
 
 function check(name: string) {
@@ -47,20 +19,6 @@ function check(name: string) {
     });
 }
 
-function getStyle(check: Check | NumericCheck) {
-    if (check === 'correct' || check === 'equal') {
-        return 'bg-green-600';
-    }
-    if (
-        check === 'incorrect' ||
-        check === 'up' ||
-        check === 'down'
-    ) {
-        return 'bg-red-600';
-    }
-    return 'bg-orange-600';
-}
-
 function App() {
     const [languages, setLanguages] = useState<Language[]>(
         []
@@ -69,7 +27,7 @@ function App() {
     const [inputError, setInputError] = useState<
         string | null
     >(null);
-    const [languageCheck, setLanguageCheck] = useState<
+    const [languageChecks, setLanguageChecks] = useState<
         languageCheck[]
     >([]);
     const [done, setDone] = useState(false);
@@ -97,11 +55,14 @@ function App() {
         } else {
             setDropdownVisible(false);
         }
-    }, [inputValue]);
+    }, [inputValue, languages]);
     return (
         <div>
-            <h1>ProLanDle</h1>
+            <h1 className="text-4xl text-center m-10">
+                ProLanDle
+            </h1>
             <form
+                className="flex justify-center"
                 onSubmit={(e) => {
                     e.preventDefault();
                     if (
@@ -127,9 +88,9 @@ function App() {
                     check(inputValue)
                         .then((response) => response.json())
                         .then((data) => {
-                            setLanguageCheck([
+                            setLanguageChecks([
                                 data,
-                                ...languageCheck,
+                                ...languageChecks,
                             ]);
                             if (
                                 data.name.check ===
@@ -158,6 +119,14 @@ function App() {
                                 (language) => (
                                     <div
                                         key={language.name}
+                                        onClick={() => {
+                                            setInputValue(
+                                                language.name
+                                            );
+                                            setDropdownVisible(
+                                                false
+                                            );
+                                        }}
                                     >
                                         {language.name}
                                     </div>
@@ -166,71 +135,7 @@ function App() {
                         </div>
                     )}
             </form>
-            <table>
-                <tbody>
-                    {languageCheck.map(
-                        ({
-                            name,
-                            paradigm,
-                            typeSystem,
-                            translatingMethod,
-                            rank,
-                            year,
-                        }) => {
-                            return (
-                                <tr key={name.value}>
-                                    <td
-                                        className={getStyle(
-                                            name.check
-                                        )}
-                                    >
-                                        {name.value}
-                                    </td>
-                                    <td
-                                        className={getStyle(
-                                            paradigm.check
-                                        )}
-                                    >
-                                        {paradigm.value.join(
-                                            ', '
-                                        )}
-                                    </td>
-                                    <td
-                                        className={getStyle(
-                                            typeSystem.check
-                                        )}
-                                    >
-                                        {typeSystem.value}
-                                    </td>
-                                    <td
-                                        className={getStyle(
-                                            translatingMethod.check
-                                        )}
-                                    >
-                                        {
-                                            translatingMethod.value
-                                        }
-                                    </td>
-                                    <td
-                                        className={getStyle(
-                                            rank.check
-                                        )}
-                                    >
-                                        {rank.value}
-                                    </td>
-                                    <td
-                                        className={getStyle(
-                                            year.check
-                                        )}
-                                    >
-                                        {year.value}
-                                    </td>
-                                </tr>
-                            );
-                        }
-                    )}
-                </tbody>
-            </table>
+            <Table languageChecks={languageChecks} />
         </div>
     );
 }

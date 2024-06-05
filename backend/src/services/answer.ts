@@ -148,12 +148,12 @@ export class AnswerService {
         ) {
             check.translatingMethod.check = 'correct';
         }
-        if (todaysAnswer.rank < toCheckEntry.rank) {
+        if (todaysAnswer.rank > toCheckEntry.rank) {
             check.rank.check = 'down';
         } else if (todaysAnswer.rank > toCheckEntry.rank) {
             check.rank.check = 'up';
         }
-        if (todaysAnswer.year > toCheckEntry.year) {
+        if (todaysAnswer.year < toCheckEntry.year) {
             check.year.check = 'down';
         } else if (todaysAnswer.year < toCheckEntry.year) {
             check.year.check = 'up';
