@@ -62,7 +62,7 @@ function App() {
                 ProLanDle
             </h1>
             <form
-                className="flex justify-center"
+                className="flex flex-col items-center"
                 onSubmit={(e) => {
                     e.preventDefault();
                     if (
@@ -114,10 +114,11 @@ function App() {
                 />
                 {dropdownVisible &&
                     filteredLanguages?.length > 0 && (
-                        <div>
+                        <div className="w-3/4">
                             {filteredLanguages.map(
                                 (language) => (
                                     <div
+                                        className="mx-2"
                                         key={language.name}
                                         onClick={() => {
                                             setInputValue(
