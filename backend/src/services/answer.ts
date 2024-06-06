@@ -6,11 +6,16 @@ type NumericCheck = "up" | "down" | "equal";
 
 type LanguageCheck = Record<
   keyof ProgrammingLanguage,
-  {
-    value: string | number | string[];
-    check: Check | NumericCheck;
-  }
+  | {
+      value: string | string[];
+      check: Check;
+    }
+  | {
+      value: number;
+      check: NumericCheck;
+    }
 >;
+
 export class AnswerService {
   constructor(private readonly knex: Knex) {}
 
