@@ -61,8 +61,8 @@ function App() {
   );
 
   return (
-    <div className="h-full">
-      <h1 className="text-4xl text-center m-10">ProLanDle</h1>
+    <div className="flex flex-col h-full p-10">
+      <h1 className="text-4xl text-center">ProLanDle</h1>
       <div className="flex flex-col gap-14">
         <div className="flex flex-col items-center">
           <GuessBox
@@ -77,7 +77,7 @@ function App() {
 
         <Table languageChecks={languageChecks} />
       </div>
-      <div className="w-3/4 mx-auto">
+      <div className="w-3/4 mx-auto mt-auto">
         <p>
           <b>ProLanDle</b> (noun): <br />
           <i>Pronunciation: /ˈprōˌlan-dəl/</i> <br />

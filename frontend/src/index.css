@@ -7,4 +7,10 @@
     @apply bg-[#0d1117];
     @apply text-white;
   }
+
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
 }
