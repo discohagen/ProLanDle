@@ -7,7 +7,7 @@ import { check } from "./api/api";
 const LANGUAGE_CHECKS_KEY = "language_checks";
 
 const savedLanguageChecks = JSON.parse(
-  localStorage.getItem(LANGUAGE_CHECKS_KEY) ?? "[]"
+  localStorage.getItem(LANGUAGE_CHECKS_KEY) ?? "[]",
 ) as LanguageCheck[];
 
 function App() {
@@ -23,10 +23,10 @@ function App() {
           data.filter(
             (language) =>
               !languageChecks.some(
-                (check) => check.name.value === language.name
-              )
-          )
-        )
+                (check) => check.name.value === language.name,
+              ),
+          ),
+        ),
       );
   }, [languageChecks]);
 
