@@ -5,7 +5,7 @@ export type Check =
 
 export type NumericCheck = 'up' | 'down' | 'equal';
 
-export type languageCheck = {
+export type LanguageCheck = {
     name: {
         value: string;
         check: Check;

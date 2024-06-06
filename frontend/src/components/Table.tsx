@@ -1,11 +1,11 @@
 import {
     Check,
     NumericCheck,
-    languageCheck,
+    LanguageCheck,
 } from '../types/language';
 
 type Props = {
-    languageChecks: languageCheck[];
+    languageChecks: LanguageCheck[];
 };
 
 function getStyle(check: Check | NumericCheck) {
@@ -45,7 +45,7 @@ export function Table(props: Props) {
                     : value;
         }
     }
-    function renderCells(languageCheck: languageCheck) {
+    function renderCells(languageCheck: LanguageCheck) {
         return Object.values(languageCheck).map(
             ({ check, value }) => {
                 return (
