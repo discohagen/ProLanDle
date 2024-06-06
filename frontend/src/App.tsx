@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table } from "./components/Table";
 import { Language, LanguageCheck } from "./types/language";
-import { Form } from "./components/Form";
 import { check } from "./api/api";
+import { GuessBox } from "./components/GuessBox";
 
 const LANGUAGE_CHECKS_KEY = "language_checks";
 
@@ -14,6 +14,13 @@ function App() {
   const [languages, setLanguages] = useState<Language[]>([]);
   const [languageChecks, setLanguageChecks] =
     useState<LanguageCheck[]>(savedLanguageChecks);
+
+  const [guessBoxInput, setGuessBoxInput] = useState("");
+
+  const finished = useMemo(
+    () => languageChecks.some((check) => check.name.check === "correct"),
+    [languageChecks],
+  );
 
   useEffect(() => {
     fetch("http://localhost:3000/languages")
@@ -34,24 +41,42 @@ function App() {
     localStorage.setItem(LANGUAGE_CHECKS_KEY, JSON.stringify(languageChecks));
   }, [languageChecks]);
 
-  function handleFormSubmit(language: string) {
-    check(language)
-      .then((response) => response.json())
-      .then((data) => {
-        setLanguageChecks([data, ...languageChecks]);
-      });
-  }
+  const handleLanguageSelect = useCallback(
+    (language: string) => {
+      setLanguages(
+        languages.filter((language) => {
+          return language.name.toLowerCase() !== guessBoxInput.toLowerCase();
+        }),
+      );
+
+      check(language)
+        .then((response) => response.json())
+        .then((data) => {
+          setLanguageChecks([data, ...languageChecks]);
+        });
+
+      setGuessBoxInput("");
+    },
+    [guessBoxInput, languages, languageChecks],
+  );
 
   return (
     <div className="h-full">
       <h1 className="text-4xl text-center m-10">ProLanDle</h1>
-      <Form
-        languages={languages}
-        setLanguages={setLanguages}
-        onSubmit={handleFormSubmit}
-        done={languageChecks.some((check) => check.name.check === "correct")}
-      />
-      <Table languageChecks={languageChecks} />
+      <div className="flex flex-col gap-14">
+        <div className="flex flex-col items-center">
+          <GuessBox
+            hidden={finished}
+            placeholder="Type Programming Language..."
+            onChange={(e) => setGuessBoxInput(e.target.value)}
+            value={guessBoxInput}
+            options={languages.map((language) => language.name)}
+            onOptionSelect={(option) => handleLanguageSelect(option)}
+          />
+        </div>
+
+        <Table languageChecks={languageChecks} />
+      </div>
       <div className="w-3/4 mx-auto">
         <p>
           <b>ProLanDle</b> (noun): <br />

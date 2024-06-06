@@ -40,9 +40,9 @@ export function Table(props: Props) {
     });
   }
   function renderRows() {
-    return props.languageChecks.map((languageCheck) => {
+    return props.languageChecks.map((languageCheck, idx) => {
       return (
-        <tr key={languageCheck.name.value} className="h-16 w-3/4">
+        <tr key={idx} className="h-16 w-3/4">
           {renderCells(languageCheck)}
         </tr>
       );
@@ -50,7 +50,7 @@ export function Table(props: Props) {
   }
 
   return (
-    <div className="flex justify-center my-10">
+    <div className="flex justify-center">
       <table className="w-3/4">
         <tbody>
           {props.languageChecks.length > 0 && (
