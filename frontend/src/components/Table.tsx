@@ -21,65 +21,157 @@ import {
   SiCoffeescript,
 } from "react-icons/si";
 import { Check, NumericCheck, LanguageCheck } from "../types/language";
+import React from "react";
 
 type Props = {
   languageChecks: LanguageCheck[];
 };
 
-function getProgrammingLanguageIcon(language: string) {
+type ProgrammingLanguageInfo = {
+  icon: React.ReactNode;
+  link: string;
+};
+
+function getProgrammingLanguageInfo(language: string): ProgrammingLanguageInfo {
   switch (language) {
     case "Python":
-      return <SiPython />;
+      return {
+        icon: <SiPython />,
+        link: "https://www.python.org/",
+      };
     case "Java":
-      return <FaJava />;
+      return {
+        icon: <FaJava />,
+        link: "https://www.java.com/",
+      };
     case "C++":
-      return <SiCplusplus />;
+      return {
+        icon: <SiCplusplus />,
+        link: "https://en.wikipedia.org/wiki/C%2B%2B",
+      };
     case "C":
-      return <SiC />;
+      return {
+        icon: <SiC />,
+        link: "https://en.wikipedia.org/wiki/C_(programming_language)",
+      };
     case "JavaScript":
-      return <SiJavascript />;
+      return {
+        icon: <SiJavascript />,
+        link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      };
     case "C#":
-      return <SiCsharp />;
+      return {
+        icon: <SiCsharp />,
+        link: "https://en.wikipedia.org/wiki/C_Sharp_(programming_language)",
+      };
     case "Go":
-      return <SiGo />;
+      return {
+        icon: <SiGo />,
+        link: "https://go.dev/",
+      };
     case "TypeScript":
-      return <SiTypescript />;
+      return {
+        icon: <SiTypescript />,
+        link: "https://www.typescriptlang.org/",
+      };
     case "R":
-      return <SiR />;
+      return {
+        icon: <SiR />,
+        link: "https://www.r-project.org/",
+      };
     case "Bash":
-      return <FaTerminal />;
+      return {
+        icon: <FaTerminal />,
+        link: "https://en.wikipedia.org/wiki/Bash_(Unix_shell)",
+      };
     case "PHP":
-      return <FaPhp />;
+      return {
+        icon: <FaPhp />,
+        link: "https://www.php.net/",
+      };
     case "Ruby":
-      return <SiRuby />;
+      return {
+        icon: <SiRuby />,
+        link: "https://www.ruby-lang.org/",
+      };
+    case "SAS":
+      return {
+        icon: language,
+        link: "https://www.sas.com/",
+      };
     case "Swift":
-      return <SiSwift />;
+      return {
+        icon: <SiSwift />,
+        link: "https://www.swift.org/",
+      };
     case "Dart":
-      return <SiDart />;
+      return {
+        icon: <SiDart />,
+        link: "https://dart.dev/",
+      };
     case "Rust":
-      return <SiRust />;
+      return {
+        icon: <SiRust />,
+        link: "https://www.rust-lang.org/",
+      };
     case "Kotlin":
-      return <SiKotlin />;
+      return {
+        icon: <SiKotlin />,
+        link: "https://kotlinlang.org/",
+      };
     case "Scala":
-      return <SiScala />;
+      return {
+        icon: <SiScala />,
+        link: "https://www.scala-lang.org/",
+      };
+    case "Assembly":
+      return {
+        icon: language,
+        link: "https://en.wikipedia.org/wiki/Assembly_language",
+      };
     case "Perl":
-      return <SiPerl />;
+      return {
+        icon: <SiPerl />,
+        link: "https://www.perl.org/",
+      };
     case "Lua":
-      return <SiLua />;
+      return {
+        icon: <SiLua />,
+        link: "https://www.lua.org/",
+      };
+    case "Cobol":
+      return {
+        icon: language,
+        link: "https://en.wikipedia.org/wiki/COBOL",
+      };
     case "ABAP":
-      return <SiSap />;
+      return {
+        icon: <SiSap />,
+        link: "https://help.sap.com/doc/abapdocu_751_index_htm/7.51/de-DE/abenabap_overview.htm",
+      };
     case "Prolog":
-      return <DiProlog />;
+      return {
+        icon: <DiProlog />,
+        link: "https://www.swi-prolog.org/",
+      };
     case "CoffeeScript":
-      return <SiCoffeescript />;
+      return {
+        icon: <SiCoffeescript />,
+        link: "https://coffeescript.org/",
+      };
     default:
-      return <span className="text-base">{language}</span>;
+      return {
+        icon: language,
+        link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      };
   }
 }
 
-function getStyle(check: Check | NumericCheck) {
+function getStyle(key: string, check: Check | NumericCheck) {
   const styles = ["text-center", "border-[1rem]", "border-[#0d1117]", "w-1/6"];
-  if (check === "correct" || check === "equal") {
+  if (key === "name") {
+    styles.push("bg-transparent");
+  } else if (check === "correct" || check === "equal") {
     styles.push("bg-green-600");
   } else if (check === "incorrect" || check === "up" || check === "down") {
     styles.push("bg-red-600");
@@ -102,13 +194,16 @@ export function Table(props: Props) {
         return `${value} ↓`;
       default:
         if (key === "name") {
+          const info = getProgrammingLanguageInfo(value as string);
           return (
-            <div
+            <a
               title={value as string}
-              className="text-4xl items-center flex justify-center"
+              className={`${typeof info.icon === "string" ? "text-2xl" : "text-4xl"} items-center flex justify-center`}
+              href={info.link}
+              target="_blank"
             >
-              {getProgrammingLanguageIcon(value as string)}
-            </div>
+              {info.icon}
+            </a>
           );
         }
         return Array.isArray(value) ? value.join(", ") : value;
@@ -117,7 +212,7 @@ export function Table(props: Props) {
   function renderCells(languageCheck: LanguageCheck) {
     return Object.entries(languageCheck).map(([key, { check, value }]) => {
       return (
-        <td key={[check, value].join()} className={getStyle(check)}>
+        <td key={[check, value].join()} className={getStyle(key, check)}>
           {renderResult(key, check, value)}
         </td>
       );
@@ -143,7 +238,14 @@ export function Table(props: Props) {
               <th>Paradigms</th>
               <th>Typing</th>
               <th>Translating</th>
-              <th>Rank</th>
+              <th>
+                <a
+                  href="https://spectrum.ieee.org/the-top-programming-languages-2023"
+                  target="_blank"
+                >
+                  Rank<sup className="p-1">i</sup>
+                </a>
+              </th>
               <th>Year</th>
             </tr>
           )}
