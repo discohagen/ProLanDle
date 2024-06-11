@@ -1,8 +1,81 @@
+import { DiProlog } from "react-icons/di";
+import { FaJava, FaTerminal, FaPhp } from "react-icons/fa";
+import {
+  SiPython,
+  SiCplusplus,
+  SiC,
+  SiJavascript,
+  SiCsharp,
+  SiGo,
+  SiTypescript,
+  SiR,
+  SiRuby,
+  SiSwift,
+  SiDart,
+  SiRust,
+  SiKotlin,
+  SiScala,
+  SiPerl,
+  SiLua,
+  SiSap,
+  SiCoffeescript,
+} from "react-icons/si";
 import { Check, NumericCheck, LanguageCheck } from "../types/language";
 
 type Props = {
   languageChecks: LanguageCheck[];
 };
+
+function getProgrammingLanguageIcon(language: string) {
+  switch (language) {
+    case "Python":
+      return <SiPython />;
+    case "Java":
+      return <FaJava />;
+    case "C++":
+      return <SiCplusplus />;
+    case "C":
+      return <SiC />;
+    case "JavaScript":
+      return <SiJavascript />;
+    case "C#":
+      return <SiCsharp />;
+    case "Go":
+      return <SiGo />;
+    case "TypeScript":
+      return <SiTypescript />;
+    case "R":
+      return <SiR />;
+    case "Bash":
+      return <FaTerminal />;
+    case "PHP":
+      return <FaPhp />;
+    case "Ruby":
+      return <SiRuby />;
+    case "Swift":
+      return <SiSwift />;
+    case "Dart":
+      return <SiDart />;
+    case "Rust":
+      return <SiRust />;
+    case "Kotlin":
+      return <SiKotlin />;
+    case "Scala":
+      return <SiScala />;
+    case "Perl":
+      return <SiPerl />;
+    case "Lua":
+      return <SiLua />;
+    case "ABAP":
+      return <SiSap />;
+    case "Prolog":
+      return <DiProlog />;
+    case "CoffeeScript":
+      return <SiCoffeescript />;
+    default:
+      return <span className="text-base">{language}</span>;
+  }
+}
 
 function getStyle(check: Check | NumericCheck) {
   const styles = ["text-center", "border-[1rem]", "border-[#0d1117]", "w-1/6"];
@@ -18,6 +91,7 @@ function getStyle(check: Check | NumericCheck) {
 
 export function Table(props: Props) {
   function renderResult(
+    key: string,
     check: Check | NumericCheck,
     value: string | string[] | number,
   ) {
@@ -27,14 +101,24 @@ export function Table(props: Props) {
       case "down":
         return `${value} ↓`;
       default:
+        if (key === "name") {
+          return (
+            <div
+              title={value as string}
+              className="text-4xl items-center flex justify-center"
+            >
+              {getProgrammingLanguageIcon(value as string)}
+            </div>
+          );
+        }
         return Array.isArray(value) ? value.join(", ") : value;
     }
   }
   function renderCells(languageCheck: LanguageCheck) {
-    return Object.values(languageCheck).map(({ check, value }) => {
+    return Object.entries(languageCheck).map(([key, { check, value }]) => {
       return (
         <td key={[check, value].join()} className={getStyle(check)}>
-          {renderResult(check, value)}
+          {renderResult(key, check, value)}
         </td>
       );
     });
