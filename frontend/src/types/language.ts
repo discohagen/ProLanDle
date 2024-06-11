@@ -17,3 +17,7 @@ export type LanguageCheck = Record<
 export type Language = {
   name: string;
 };
+
+export type NewestAnswerRef = {
+  id: number;
+}

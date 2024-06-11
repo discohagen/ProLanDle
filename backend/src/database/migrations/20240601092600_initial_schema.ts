@@ -1,7 +1,5 @@
 import { Knex } from 'knex';
 
-// https://spectrum.ieee.org/the-top-programming-languages-2023
-
 export async function up(knex: Knex): Promise<void> {
     await knex.schema
         .createTable('programmingLanguages', (t) => {
@@ -13,11 +11,11 @@ export async function up(knex: Knex): Promise<void> {
             t.integer('year').notNullable();
         })
         .createTable('todaysLanguage', (t) => {
+            t.increments('id').primary();
             t.string('date');
             t.string('name')
                 .references('programmingLanguages.name')
                 .onDelete('CASCADE');
-            t.primary(['date', 'name']);
         });
     await knex('programmingLanguages').insert([
         {

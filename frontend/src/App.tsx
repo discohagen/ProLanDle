@@ -1,20 +1,24 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Table } from "./components/Table";
 import { Language, LanguageCheck } from "./types/language";
-import { check } from "./api/api";
+import { check, getLanguages, getNewestAnswerRef } from "./api/api";
 import { GuessBox } from "./components/GuessBox";
 
 const LANGUAGE_CHECKS_KEY = "language_checks";
+const NEWEST_ANSWER_REF = "newest_answer_ref";
 
 const savedLanguageChecks = JSON.parse(
   localStorage.getItem(LANGUAGE_CHECKS_KEY) ?? "[]",
 ) as LanguageCheck[];
 
+const savedNewestAnswerRef = Number.parseInt(
+  localStorage.getItem(NEWEST_ANSWER_REF) ?? "0",
+);
+
 function App() {
   const [languages, setLanguages] = useState<Language[]>([]);
-  const [languageChecks, setLanguageChecks] =
-    useState<LanguageCheck[]>(savedLanguageChecks);
-
+  const [languageChecks, setLanguageChecks] = useState(savedLanguageChecks);
+  const [newestAnswerRef, setNewestAnswerRef] = useState(savedNewestAnswerRef);
   const [guessBoxInput, setGuessBoxInput] = useState("");
 
   const finished = useMemo(
@@ -23,31 +27,44 @@ function App() {
   );
 
   useEffect(() => {
-    fetch("http://localhost:3000/languages")
-      .then(async (response) => (await response.json()) as Language[])
-      .then((data) =>
-        setLanguages(
-          data.filter(
-            (language) =>
-              !languageChecks.some(
-                (check) => check.name.value === language.name,
-              ),
-          ),
+    getLanguages().then((data) =>
+      setLanguages(
+        data.filter(
+          (language) =>
+            !languageChecks.some((check) => check.name.value === language.name),
         ),
-      );
+      ),
+    );
   }, [languageChecks]);
 
   useEffect(() => {
     localStorage.setItem(LANGUAGE_CHECKS_KEY, JSON.stringify(languageChecks));
   }, [languageChecks]);
 
+  useEffect(() => {
+    if (newestAnswerRef !== savedNewestAnswerRef) {
+      setLanguageChecks([]);
+      localStorage.setItem(NEWEST_ANSWER_REF, newestAnswerRef.toString());
+    }
+  }, [newestAnswerRef]);
+
+  useEffect(() => {
+    getNewestAnswerRef().then((data) => setNewestAnswerRef(data.id));
+  }, []);
+
   const handleLanguageSelect = useCallback(
-    (language: string) => {
+    async (language: string) => {
       setLanguages(
         languages.filter((language) => {
           return language.name.toLowerCase() !== guessBoxInput.toLowerCase();
         }),
       );
+
+      const ref = await getNewestAnswerRef();
+      if (ref.id !== newestAnswerRef) {
+        setNewestAnswerRef(ref.id);
+        return;
+      }
 
       check(language)
         .then((response) => response.json())
@@ -57,7 +74,7 @@ function App() {
 
       setGuessBoxInput("");
     },
-    [guessBoxInput, languages, languageChecks],
+    [guessBoxInput, languages, languageChecks, newestAnswerRef],
   );
 
   return (
