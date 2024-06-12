@@ -15,4 +15,5 @@ ToDo: Description how to install and host as an example
 ## Contributors
 
 [Discohagen](https://github.com/discohagen)
+
 [David Borzek](https://github.com/davidborzek)
